@@ -1,10 +1,13 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
+import { useAppSelector } from "../../app/hooks";
+import { selectCategories } from "./categorySlice";
 
-export const CategoryList = () => (
-  <Box>
-    <Typography variant="h3" component="h1">
-      CategoryList Page
-    </Typography>
-  </Box>
-);
+export const CategoryList = () => {
+  return (
+    <Box>
+      <Typography variant="h3" component="h1">
+        CategoryList Page
+      </Typography>
+    </Box>
+  );
+};
