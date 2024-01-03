@@ -1,8 +1,15 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useAppSelector } from "../../app/hooks";
 import { selectCategories } from "./categorySlice";
 import { Link } from "react-router-dom";
-import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  DataGrid,
+  GridRowsProp,
+  GridColDef,
+  GridRenderCellParams,
+  GridToolbar,
+} from "@mui/x-data-grid";
 
 export const CategoryList = () => {
   const categories = useAppSelector(selectCategories);
@@ -11,6 +18,9 @@ export const CategoryList = () => {
     id: category.id,
     name: category.name,
     description: category.description,
+    is_active: category.is_active,
+    created_at: new Date(category.created_at).toLocaleDateString("pt-BR"),
+    //updated_at: category.updated_at,
   }));
 
   /* const rows: GridRowsProp = [
@@ -20,10 +30,58 @@ export const CategoryList = () => {
   ]; */
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 150 },
-    { field: "name", headerName: "Name", width: 150 },
-    { field: "description", headerName: "Description", width: 150 },
+    { field: "name", headerName: "Name", flex: 1, renderCell: renderNameCell },
+    { field: "description", headerName: "Description", flex: 1 },
+    {
+      field: "is_active",
+      headerName: "Active",
+      flex: 1,
+      type: "boolean",
+      renderCell: renderIsActiveCell,
+    },
+    {
+      field: "created_at",
+      headerName: "Created at",
+      flex: 1,
+    },
+    {
+      field: "id",
+      headerName: "Actions",
+      flex: 1,
+      renderCell: renderActionsCell,
+    },
   ];
+
+  function renderNameCell(rowData: GridRenderCellParams) {
+    return (
+      <Link
+        style={{ textDecoration: "none" }}
+        to={`/categories/edit/${rowData.row.id}`}
+      >
+        <Typography color="primary">{rowData.row.name}</Typography>
+      </Link>
+    );
+  }
+
+  function renderActionsCell(params: GridRenderCellParams) {
+    return (
+      <IconButton
+        color="secondary"
+        onClick={() => console.log("clicked")}
+        aria-label="delete"
+      >
+        <DeleteIcon />
+      </IconButton>
+    );
+  }
+
+  function renderIsActiveCell(rowData: GridRenderCellParams) {
+    return (
+      <Typography color={rowData.value ? "primary" : "secondary"}>
+        {rowData.value ? "Active" : "Inactive"}
+      </Typography>
+    );
+  }
 
   return (
     <Box maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -32,7 +90,7 @@ export const CategoryList = () => {
           variant="contained"
           color="secondary"
           component={Link}
-          to="/category/create"
+          to="/categories/create"
           style={{ marginBottom: "1rem" }}
         >
           New Category
@@ -43,9 +101,23 @@ export const CategoryList = () => {
         <Typography key={category.id}>{category.name}</Typography>
       ))} */}
 
-      <div style={{ height: 300, width: "100%" }}>
-        <DataGrid rows={rows} columns={columns} />
-      </div>
+      <Box sx={{ display: "flex", height: 600 }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          disableColumnFilter={true}
+          disableColumnSelector={true}
+          disableDensitySelector={true}
+          components={{ Toolbar: GridToolbar }}
+          componentsProps={{
+            toolbar: {
+              showQuickFilter: true,
+              quickFilterProps: { debounceMs: 500 },
+            },
+          }}
+          //rowsPerPageOptions={[2, 20, 50, 100]}
+        />
+      </Box>
     </Box>
   );
 };
