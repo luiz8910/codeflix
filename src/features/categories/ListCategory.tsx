@@ -109,7 +109,7 @@ export const CategoryList = () => {
           disableColumnSelector={true}
           disableDensitySelector={true}
           components={{ Toolbar: GridToolbar }}
-          componentsProps={{
+          slotProps={{
             toolbar: {
               showQuickFilter: true,
               quickFilterProps: { debounceMs: 500 },
