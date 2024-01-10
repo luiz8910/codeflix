@@ -1,19 +1,9 @@
-import {
-  Box,
-  FormControl,
-  Grid,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  Switch,
-  FormGroup,
-  FormControlLabel,
-} from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
 import { selectCategoryById } from "./categorySlice";
+import { CategoryFrom } from "./components/CategoryFrom";
 
 export const EditCategory = () => {
   const id = useParams().id || "";
@@ -32,75 +22,14 @@ export const EditCategory = () => {
             <Typography variant="h4">Category Edit</Typography>
           </Box>
 
-          <Box p={2}>
-            <form>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <TextField
-                      name="name"
-                      required
-                      label="Name"
-                      variant="outlined"
-                      value={category.name}
-                      onChange={handleChange}
-                      disabled={isDisabled}
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <FormControl fullWidth>
-                    <TextField
-                      name="description"
-                      required
-                      label="Description"
-                      variant="outlined"
-                      value={category.description}
-                      onChange={handleChange}
-                      disabled={isDisabled}
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          name="is_active"
-                          color="secondary"
-                          onChange={handleToggle}
-                          checked={category.is_active}
-                        />
-                      }
-                      label="Active"
-                    />
-                  </FormGroup>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Box display="flex" gap={2}>
-                    <Button
-                      variant="contained"
-                      component={Link}
-                      to="/categories"
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      variant="contained"
-                      type="submit"
-                      color="secondary"
-                      disabled={isDisabled}
-                    >
-                      Save
-                    </Button>
-                  </Box>
-                </Grid>
-              </Grid>
-            </form>
-          </Box>
+          <CategoryFrom
+            category={category}
+            isDisabled={isDisabled}
+            isLoading={false}
+            onSubmit={() => {}}
+            handleChange={handleChange}
+            handleToggle={handleToggle}
+          />
         </Box>
       </Paper>
     </Box>
