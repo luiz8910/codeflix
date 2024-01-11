@@ -1,6 +1,6 @@
 import { Box, Button, IconButton, Typography } from "@mui/material";
-import { useAppSelector } from "../../app/hooks";
-import { selectCategories } from "./categorySlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { deleteCategory, selectCategories } from "./categorySlice";
 import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
@@ -13,6 +13,8 @@ import {
 
 export const CategoryList = () => {
   const categories = useAppSelector(selectCategories);
+
+  const dispatch = useAppDispatch();
 
   const rows: GridRowsProp = categories.map((category) => ({
     id: category.id,
@@ -47,10 +49,15 @@ export const CategoryList = () => {
     {
       field: "id",
       headerName: "Actions",
+      type: "string",
       flex: 1,
       renderCell: renderActionsCell,
     },
   ];
+
+  function handleDeleteCategory(id: string) {
+    dispatch(deleteCategory(id));
+  }
 
   function renderNameCell(rowData: GridRenderCellParams) {
     return (
@@ -67,7 +74,7 @@ export const CategoryList = () => {
     return (
       <IconButton
         color="secondary"
-        onClick={() => console.log("clicked")}
+        onClick={() => handleDeleteCategory(params.value)}
         aria-label="delete"
       >
         <DeleteIcon />
